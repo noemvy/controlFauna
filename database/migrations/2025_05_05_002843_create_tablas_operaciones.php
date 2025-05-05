@@ -24,7 +24,7 @@ return new class extends Migration
         Schema::create('patrullaje', function (Blueprint $table) {
             $table->id();
             $table->foreignId('aerodromo_id')->constrained('aerodromos')->onDelete('cascade');
-            $table->foreignId('users_id')->constrained('user')->onDelete('cascade');
+            $table->foreignId('users_id')->constrained('users')->onDelete('cascade');
             $table->string('inicio');
             $table->string('fin');
             $table->timestamps();
