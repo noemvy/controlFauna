@@ -43,6 +43,15 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        //Tabla Pieza Avion s
+        Schema::create('pieza_avion', function (Blueprint $table) {
+            $table->id();
+            $table->string('nombre');
+            $table->integer('estado');
+            $table->timestamps();
+        });
+
+        //Tabala Partes Golpeadas
         Schema::create('partes_golpeadas', function (Blueprint $table) {
             $table->id();
             $table->foreignId('reporte_id')->constrained('reporte_impactoaviar')->onDelete('restrict');
@@ -50,6 +59,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        //Tabla Partes dañadas
         Schema::create('partes_danadas', function (Blueprint $table) {
             $table->id();
             $table->foreignId('reporte_id')->nulleable()->constrained('reporte_impactoaviar')->onDelete('restrict');
@@ -64,7 +74,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('reporte_impactoaviar');
+        Schema::dropIfExists('pieza_avion');
         Schema::dropIfExists('partes_golpeadas');
-        Schema::dropIfExists('partes_');
+        Schema::dropIfExists('partes_danadas');
     }
 };
