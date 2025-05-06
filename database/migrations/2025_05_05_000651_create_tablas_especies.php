@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('nombre');
             $table->string('nombre_comun');
             $table->string('nombre_cientifico');
-            $table->string('foto');
+            $table->json('foto');
             $table->timestamps();
         });
     }
