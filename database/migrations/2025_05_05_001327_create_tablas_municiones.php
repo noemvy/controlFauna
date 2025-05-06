@@ -11,13 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //Tabla Catalogos de Municiones
-        Schema::create('catalogo_municiones', function (Blueprint $table) {
+        //Tabla Catalogos de Herramientos y Recursos del Inventario de forma global osea : malla, candela etc.
+        Schema::create('catalogo_inventarios', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('acciones_id')->constrained('acciones')->onDelete('cascade');
                 $table->string('nombre');
                 $table->boolean('consumible');
                 $table->string('descripcion')->nullable();
+                $table->timestamps();
+
 
 
         });
@@ -25,9 +27,11 @@ return new class extends Migration
         //Tabla inventario de municiones
         Schema::create('inventario_municiones', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('municiones_id')->constrained('catalogo_municiones')->onDelete('cascade');
+            $table->foreignId('catinventario_id')->constrained('catalogo_inventarios')->onDelete('cascade');
             $table->foreignId('aerodromo_id')->constrained('aerodromos')->onDelete('cascade');
             $table->integer('cantidad');
+            $table->timestamps();
+
 
 
     });
@@ -36,8 +40,10 @@ return new class extends Migration
             Schema::create('movimiento_inventario', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('aerodromo_id')->constrained('aerodromos')->onDelete('cascade');
-                $table->foreignId('municiones_id')->constrained('catalogo_municiones')->onDelete('cascade');
+                $table->foreignId('catinventario_id')->constrained('catalogo_inventarios')->onDelete('cascade');
                 $table->string('tipo_movimiento');
+                $table->timestamps();
+
 
     });
 

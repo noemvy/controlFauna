@@ -21,7 +21,7 @@ return new class extends Migration
         //Tabla Especies
         Schema::create('especies', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('familia_id')->constrained('familia')->onDelete('cascade');
+            $table->foreignId('familia_id')->constrained('familias')->onDelete('cascade');
             $table->string('nombre');
             $table->string('nombre_comun');
             $table->string('nombre_cientifico');

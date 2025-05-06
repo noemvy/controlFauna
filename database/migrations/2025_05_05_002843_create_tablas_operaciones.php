@@ -15,6 +15,7 @@ return new class extends Migration
         Schema::create('evento', function (Blueprint $table) {
             $table->id();
             $table->foreignId('aerodromo_id')->constrained('aerodromos')->onDelete('cascade');
+            $table->foreignId('users_id')->constrained('users')->onDelete('cascade');
             $table->string('tipo_evento');
             $table->string('comentario');
             $table->timestamps();
@@ -34,9 +35,10 @@ return new class extends Migration
         Schema::create('intervenciones', function (Blueprint $table) {
             $table->id();
             $table->foreignId('especies_id')->constrained('especies')->onDelete('cascade');
-            $table->foreignId('municiones_id')->constrained('catalogo_municiones')->onDelete('cascade');
+            $table->foreignId('catinventario_id')->constrained('catalogo_inventarios')->onDelete('cascade');
             $table->foreignId('acciones_id')->constrained('acciones')->onDelete('cascade');
             $table->foreignId('atractivos_id')->constrained('atractivos')->onDelete('cascade');
+            $table->morphs('reportable');
             $table->integer('vistos')->nullable();
             $table->integer('sacrificados')->nullable();
             $table->integer('dispersados')->nullable();

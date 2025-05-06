@@ -101,9 +101,9 @@ return new class extends Migration
         Schema::dropIfExists('destinatario_aerodromo');
         Schema::dropIfExists('destinatarios');
         Schema::dropIfExists('pistas');
-        Schema::dropIfExists('modelo_aeronave');
-        Schema::dropIfExists('fabrincante_aeronave');
-        Schema::dropIfExists('aerodromo');
+        Schema::dropIfExists('modelo_aeronaves');
+        Schema::dropIfExists('fabricante_aeronave');
+        Schema::dropIfExists('aerodromos');
         Schema::dropIfExists('aerolineas');
         Schema::dropIfExists('departamentos');
     }
