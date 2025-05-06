@@ -73,9 +73,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('reporte_impactoaviar');
-        Schema::dropIfExists('pieza_avion');
-        Schema::dropIfExists('partes_golpeadas');
+
         Schema::dropIfExists('partes_danadas');
+        Schema::dropIfExists('partes_golpeadas');
+        Schema::dropIfExists('pieza_avion');
+        Schema::dropIfExists('reporte_impactoaviar');
     }
 };

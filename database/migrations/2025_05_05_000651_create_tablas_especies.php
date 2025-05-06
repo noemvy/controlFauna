@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         //Tabla Familia
-        Schema::create('familia', function (Blueprint $table) {
+        Schema::create('familias', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
             $table->timestamps();
@@ -35,7 +35,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('familia');
         Schema::dropIfExists('especies');
+        Schema::dropIfExists('familias');
     }
 };

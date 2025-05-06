@@ -48,8 +48,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('catalogo_municiones');
-        Schema::dropIfExists('inventario_municiones');
+
         Schema::dropIfExists('movimiento_inventario');
+        Schema::dropIfExists('inventario_municiones');
+        Schema::dropIfExists('catalogo_municiones');
     }
 };

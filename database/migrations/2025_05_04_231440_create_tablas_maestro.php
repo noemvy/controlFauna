@@ -98,13 +98,13 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('departemos');
-        Schema::dropIfExists('aerolineas');
-        Schema::dropIfExists('aerodromos');
-        Schema::dropIfExists('fabricante_aeronaves');
-        Schema::dropIfExists('modelo_aeronave');
-        Schema::dropIfExists('pistas');
-        Schema::dropIfExists('destinatarios');
         Schema::dropIfExists('destinatario_aerodromo');
+        Schema::dropIfExists('destinatarios');
+        Schema::dropIfExists('pistas');
+        Schema::dropIfExists('modelo_aeronave');
+        Schema::dropIfExists('fabrincante_aeronave');
+        Schema::dropIfExists('aerodromo');
+        Schema::dropIfExists('aerolineas');
+        Schema::dropIfExists('departamentos');
     }
 };
