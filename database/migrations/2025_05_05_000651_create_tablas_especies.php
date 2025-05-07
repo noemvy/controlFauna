@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         //Tabla Familia
-        Schema::create('familias', function (Blueprint $table) {
+        Schema::create('grupos', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
             $table->timestamps();
@@ -21,10 +21,10 @@ return new class extends Migration
         //Tabla Especies
         Schema::create('especies', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('familia_id')->constrained('familias')->onDelete('cascade');
-            $table->string('nombre');
+            $table->foreignId('grupos_id')->constrained('grupos')->onDelete('cascade');
             $table->string('nombre_comun');
             $table->string('nombre_cientifico');
+            $table->string('familia');
             $table->json('foto');
             $table->timestamps();
         });
