@@ -7,13 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class Especie extends Model
 {
     use HasFactory;
-    protected $fillable = ['familia_id', 'nombre', 'nombre_comun', 'foto'];
+    protected $fillable = ['grupo_id', 'nombre', 'nombre_comun', 'foto'];
 
 
-    //Relacion con Familia
-    public function familia()
+    //Relacion con el Grupo al que pertenece la especie
+    public function grupo()
     {
-        return $this->belongsTo(Familia::class, 'familia_id');
+        return $this->belongsTo(Grupo::class, 'grupos_id');
     }
 
     //

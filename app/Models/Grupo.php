@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Familia extends Model
+class Grupo extends Model
 {
     use HasFactory;
     protected $fillable = ['nombre'];
 
-    //Relacion con Especies 
+    //Relacion con Especies
     public function especies()
     {
-        return $this->hasMany(Especie::class, 'familia_id');
+        return $this->hasMany(Grupo::class, 'grupos_id');
     }
 }
