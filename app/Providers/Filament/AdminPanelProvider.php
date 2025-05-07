@@ -27,6 +27,8 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->brandLogo(asset('images/logo-tocumen.png'))
+            ->brandLogoHeight('70px')
             ->colors([
                 'primary' => Color::Amber,
             ])
