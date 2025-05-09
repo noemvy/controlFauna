@@ -28,13 +28,14 @@ class AtractivosResource extends Resource
                 Forms\Components\Select::make('nombre')
                 ->label('Atractivo para la fauna')
                 ->options([
-                    'Vertederos de basura',
-                    'Fuentes de agua estancada',
-                    'Cultivos cercanos',
-                    'Presencia de insectos',
-                    'Lagunas o riós',
-                    'Áreas de vegetación densa',
+                    'Vertederos de basura' => 'Vertederos de basura',
+                    'Fuentes de agua estancada' => 'Fuentes de agua estancada',
+                    'Cultivos cercanos' => 'Cultivos cercanos',
+                    'Presencia de insectos' => 'Presencia de insectos',
+                    'Lagunas o ríos' => 'Lagunas o ríos',
+                    'Áreas de vegetación densa' => 'Áreas de vegetación densa',
                 ])
+
             ]);
     }
 
@@ -48,7 +49,9 @@ class AtractivosResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

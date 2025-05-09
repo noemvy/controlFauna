@@ -30,9 +30,9 @@ class AccionesResource extends Resource
                 Forms\Components\Select::make('nombre')
                 ->label('Acción realizada')
                 ->options([
-                    'Recogida',
-                    'Monitoreo',
-                    'Disperción'
+                    'Recogida' => 'Recogida',
+                    'Monitoreo'=> 'Monitoreo',
+                    'Disperción' => 'Disperción'
                 ])
             ]);
     }
@@ -47,7 +47,10 @@ class AccionesResource extends Resource
                 //
             ])
             ->actions([
+
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

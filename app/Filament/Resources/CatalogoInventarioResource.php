@@ -20,6 +20,7 @@ class CatalogoInventarioResource extends Resource
     protected static ?string $model = CatalogoInventario::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-flag';
+    protected static ?string $navigationLabel = "Catálogo de Inventario";
     protected static ?string $navigationGroup = 'Catálogos';
     protected static ?int $navigationSort = 8;
 
@@ -33,21 +34,31 @@ class CatalogoInventarioResource extends Resource
                 ->searchable()
                 ->required(),
 
-                Forms\Components\TextInput::make('nombre')
-                ->label('Nombre del equipo')
-                ->required()
-                ->maxLength(20),
+                Forms\Components\Select::make('nombre')
+                ->label('Equipo')
+                ->placeholder('Eliga el equipo')
+                ->options(CatalogoInventario::all()->pluck('nombre','id'))
+                    ->required()
+                    ->searchable()
+                    ->preload(),
 
-                Forms\Components\Select::make('consumible')
-                    ->label('Consumible')
+                Forms\Components\Select::make('categoria_equipo')
+                    ->label('Tipo de Equipo')
                     ->options([
-                        1 => 'Si',
-                        0 => 'No',
-                    ]),
+                        'Armas' => 'Armas',
+                        'Municiones' => 'Municiones',
+                        'Instrumento' => 'Instrumento',
+                    ])
+                    ->required(),
                 Forms\Components\TextInput::make('descripcion')
                     ->label('Descripción del equipo')
                     ->required()
                     ->maxLength(200),
+                Forms\Components\TextInput::make('cantidad_minima')
+                    ->label('Cantidad Minima')
+                    ->maxLength(10)
+                    ->required(),
+
             ]);
 
     }
@@ -58,21 +69,25 @@ class CatalogoInventarioResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('nombre')
                 ->searchable(),
-                Tables\Columns\IconColumn::make('consumible')
-                ->label('Activo'),
                 Tables\Columns\TextColumn::make('descripcion')
+                ->searchable(),
+                // Tables\Columns\TextColumn::make('cantidad_minima')
+                // ->searchable(),
+                Tables\Columns\TextColumn::make('cantidad_stock')
                 ->searchable(),
             ])
             ->filters([
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
+
                     Tables\Actions\DeleteBulkAction::make(),
-                ]),
+
             ]);
     }
 
