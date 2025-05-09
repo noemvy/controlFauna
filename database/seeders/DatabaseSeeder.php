@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
         AccionesSeeder::class,
         AtractivosSeeder::class,
         GrupoSeeder::class,
-        CatalogoInventarioSeeder::class,
+        CatalogoInventariosSeeder::class,
 
     ]);
 }
