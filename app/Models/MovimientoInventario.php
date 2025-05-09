@@ -94,6 +94,11 @@ protected static function ajustarInventario($movimiento, $accion)
             ->where('aerodromo_id', $this->aerodromo_id); // Si deseas filtrar por aeródromo
     }
 
+     public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
 
 
 

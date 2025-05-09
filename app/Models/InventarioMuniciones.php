@@ -31,7 +31,7 @@ class InventarioMuniciones extends Model
 public function movimientos()
 {
     return $this->hasMany(MovimientoInventario::class, 'catinventario_id', 'catinventario_id')
-        ->where('aerodromo_id', $this->aerodromo_id); 
+        ->where('aerodromo_id', $this->aerodromo_id);
 }
 
 
