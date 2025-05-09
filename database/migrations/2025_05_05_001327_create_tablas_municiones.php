@@ -16,7 +16,7 @@ return new class extends Migration
                 $table->id();
                 $table->foreignId('acciones_id')->constrained('acciones')->onDelete('cascade');
                 $table->string('nombre');
-                $table->boolean('consumible');
+                $table->string('categoria_equipo');
                 $table->string('descripcion')->nullable();
                 $table->timestamps();
 
@@ -29,7 +29,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('catinventario_id')->constrained('catalogo_inventarios')->onDelete('cascade');
             $table->foreignId('aerodromo_id')->constrained('aerodromos')->onDelete('cascade');
-            $table->integer('cantidad');
+            $table->string('cantidad_actual')->nullable();
+            $table->string('cantidad_minima')->nullable();
             $table->timestamps();
 
 
@@ -41,7 +42,10 @@ return new class extends Migration
                 $table->id();
                 $table->foreignId('aerodromo_id')->constrained('aerodromos')->onDelete('cascade');
                 $table->foreignId('catinventario_id')->constrained('catalogo_inventarios')->onDelete('cascade');
+                $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
                 $table->string('tipo_movimiento');
+                $table->integer('cantidad_usar');
+                $table->string('comentario')->nullable();
                 $table->timestamps();
 
 
@@ -57,6 +61,6 @@ return new class extends Migration
 
         Schema::dropIfExists('movimiento_inventario');
         Schema::dropIfExists('inventario_municiones');
-        Schema::dropIfExists('catalogo_municiones');
+        Schema::dropIfExists('catalogo_inventarios');
     }
 };
