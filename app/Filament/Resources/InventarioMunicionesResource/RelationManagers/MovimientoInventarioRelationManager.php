@@ -11,6 +11,9 @@ use App\Models\CatalogoInventario;
 use App\Models\InventarioMuniciones;
 use App\Models\Aerodromo;
 use App\Models\User;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Placeholder;
 
 
 class MovimientoInventarioRelationManager extends RelationManager
@@ -21,34 +24,82 @@ class MovimientoInventarioRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('aerodromo_id')
-                    ->label('Aeródromo')
-                    ->options(Aerodromo::pluck('nombre', 'id'))
-                    ->required(),
+                // Forms\Components\Select::make('aerodromo_id')
+                //     ->label('Aeródromo')
+                //     ->options(Aerodromo::pluck('nombre', 'id'))
+                //     ->required(),
 
-                Forms\Components\Select::make('catinventario_id')
-                    ->label('Equipo')
-                    ->options(CatalogoInventario::pluck('nombre', 'id'))
-                    ->required(),
+                // Forms\Components\Select::make('catinventario_id')
+                //     ->label('Equipo')
+                //     ->options(CatalogoInventario::pluck('nombre', 'id'))
+                //     ->required(),
 
-                Forms\Components\Select::make('user_id')
-                    ->label('Usuario')
-                    ->options(User::pluck('name', 'id'))
-                    ->required(),
+                // Forms\Components\Select::make('user_id')
+                //     ->label('Usuario')
+                //     ->options(User::pluck('name', 'id'))
+                //     ->required(),
 
-                Forms\Components\Select::make('tipo_movimiento')
-                    ->label('Tipo de Movimiento')
-                    ->options([
-                        'Entrada' => 'Entrada',
-                        'Salida' => 'Salida',
-                    ])
-                    ->required(),
+                // Forms\Components\Select::make('tipo_movimiento')
+                //     ->label('Tipo de Movimiento')
+                //     ->options([
+                //         'Entrada' => 'Entrada',
+                //         'Salida' => 'Salida',
+                //     ])
+                //     ->required(),
 
-                Forms\Components\TextInput::make('cantidad_usar')
-                    ->label('Cantidad del Movimiento')
-                    ->numeric()
-                    ->required(),
+                // Forms\Components\TextInput::make('cantidad_usar')
+                //     ->label('Cantidad del Movimiento')
+                //     ->numeric()
+                //     ->required(),
+                Select::make('aerodromo_id')
+            ->label('Aeródromo')
+            ->options(Aerodromo::pluck('nombre', 'id'))
+            ->required()
+            ->reactive()
+            ->afterStateUpdated(fn (callable $set) => $set('catinventario_id', null)),
+
+        Select::make('catinventario_id')
+            ->label('Equipo')
+            ->options(CatalogoInventario::pluck('nombre', 'id'))
+            ->required()
+            ->reactive(),
+
+        // Mostrar el stock actual en tiempo real
+        Placeholder::make('stock_actual')
+            ->label('Stock disponible')
+            ->content(function ($get) {
+                $stock = \App\Models\InventarioMuniciones::where('aerodromo_id', $get('aerodromo_id'))
+                    ->where('catinventario_id', $get('catinventario_id'))
+                    ->first()?->cantidad_actual ?? 'No disponible';
+                return $stock;
+            }),
+
+        Select::make('tipo_movimiento')
+            ->options([
+                'Entrada' => 'Entrada',
+                'Salida' => 'Salida',
+            ])
+            ->required(),
+Forms\Components\Select::make('user_id')
+                ->label('Usuario')
+                ->options(User::pluck('name', 'id'))
+                ->required(),
+        TextInput::make('cantidad_usar')
+            ->label('Cantidad del movimiento')
+            ->numeric()
+            ->required()
+            ->rule(function ($get) {
+                if ($get('tipo_movimiento') === 'Salida') {
+                    $stock = \App\Models\InventarioMuniciones::where('aerodromo_id', $get('aerodromo_id'))
+                        ->where('catinventario_id', $get('catinventario_id'))
+                        ->first()?->cantidad_actual ?? 0;
+
+                    return "max:$stock";
+                }
+                return null;
+            }),
             ]);
+
     }
 
     public  function table(Table $table): Table

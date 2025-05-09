@@ -16,6 +16,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use app\Filament\Resources\MovimientoInventarioRelationManagerResource;
+use Filament\Tables\Filters\SelectFilter;
 
 
 
@@ -27,6 +28,7 @@ class InventarioMunicionesResource extends Resource
     protected static ?string $navigationLabel = "Inventario de Municiones";
     protected static ?string $navigationGroup = 'Catálogos';
     protected static ?int $navigationSort = 9;
+    protected static ?string $modelLabel = 'Inventario de Equipos';
 
     public static function form(Form $form): Form
     {
@@ -74,14 +76,20 @@ class InventarioMunicionesResource extends Resource
             Tables\Columns\TextColumn::make('cantidad_actual')->label('Cantidad Disponible'),
             Tables\Columns\TextColumn::make('cantidad_minima')->label('Cantidad Minima'),
             // Mostrar movimientos asociados
-            Tables\Columns\TextColumn::make('movimientos_count')->label('Número de Movimientos')
-                ->getStateUsing(function ($record) {
-                    return $record->movimientos->count(); // Cuenta los movimientos asociados
-                }),
+            // Tables\Columns\TextColumn::make('movimientos_count')->label('Número de Movimientos')
+            //     ->getStateUsing(function ($record) {
+            //         return $record->movimientos->count(); // Cuenta los movimientos asociados
+            //     }),
+            // Tables\Columns\TextColumn::make('movimientos.tipo_movimiento')->label('Tipos Movimientos'),
                 ])
 
+
             ->filters([
-                //
+                SelectFilter::make('aerodromo.id')
+                ->label('Filtrar por Aeropuerto')
+                ->relationship('aerodromo', 'nombre')
+                ->placeholder('Selecciona un Equipo'),
+
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
