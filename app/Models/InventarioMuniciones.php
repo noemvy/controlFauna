@@ -6,8 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class InventarioMuniciones extends Model
 {
-    protected $fillable = ['catinventario_id', 'aerodromo_id', 'cantidad'];
-
+    protected $fillable = [ 'catinventario_id',
+        'aerodromo_id',
+        'cantidad_actual',
+        'cantidad_minima',];
     //Relacion con Aerodromo
         public function aerodromo()
     {
@@ -25,4 +27,14 @@ class InventarioMuniciones extends Model
         return $this->belongsTo(User::class, 'user_id');
 
 }
+// En el modelo InventarioMuniciones
+public function movimientos()
+{
+    return $this->hasMany(MovimientoInventario::class, 'catinventario_id', 'catinventario_id')
+        ->where('aerodromo_id', $this->aerodromo_id); 
+}
+
+
+
+
 }
