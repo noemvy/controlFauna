@@ -9,12 +9,15 @@ use Filament\Forms\Form;
 use Filament\Tables\Table;
 use App\Models\CatalogoInventario;
 use App\Models\InventarioMuniciones;
+use App\Models\MovimientoInventario;
 use App\Models\Aerodromo;
 use App\Models\User;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Placeholder;
-
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\NativeSelect;
+use Filament\Notifications\Notification;
 
 class MovimientoInventarioRelationManager extends RelationManager
 {
@@ -23,117 +26,161 @@ class MovimientoInventarioRelationManager extends RelationManager
     public function form(Form $form): Form
     {
         return $form
-            ->schema([
-                // Forms\Components\Select::make('aerodromo_id')
-                //     ->label('Aeródromo')
-                //     ->options(Aerodromo::pluck('nombre', 'id'))
-                //     ->required(),
-
-                // Forms\Components\Select::make('catinventario_id')
-                //     ->label('Equipo')
-                //     ->options(CatalogoInventario::pluck('nombre', 'id'))
-                //     ->required(),
-
-                // Forms\Components\Select::make('user_id')
-                //     ->label('Usuario')
-                //     ->options(User::pluck('name', 'id'))
-                //     ->required(),
-
-                // Forms\Components\Select::make('tipo_movimiento')
-                //     ->label('Tipo de Movimiento')
-                //     ->options([
-                //         'Entrada' => 'Entrada',
-                //         'Salida' => 'Salida',
-                //     ])
-                //     ->required(),
-
-                // Forms\Components\TextInput::make('cantidad_usar')
-                //     ->label('Cantidad del Movimiento')
-                //     ->numeric()
-                //     ->required(),
-                Select::make('aerodromo_id')
-            ->label('Aeródromo')
-            ->options(Aerodromo::pluck('nombre', 'id'))
-            ->required()
-            ->reactive()
-            ->afterStateUpdated(fn (callable $set) => $set('catinventario_id', null)),
-
-        Select::make('catinventario_id')
-            ->label('Equipo')
-            ->options(CatalogoInventario::pluck('nombre', 'id'))
-            ->required()
-            ->reactive(),
-
-        // Mostrar el stock actual en tiempo real
-        Placeholder::make('stock_actual')
-            ->label('Stock disponible')
-            ->content(function ($get) {
-                $stock = \App\Models\InventarioMuniciones::where('aerodromo_id', $get('aerodromo_id'))
-                    ->where('catinventario_id', $get('catinventario_id'))
-                    ->first()?->cantidad_actual ?? 'No disponible';
-                return $stock;
-            }),
-
-        Select::make('tipo_movimiento')
-            ->options([
-                'Entrada' => 'Entrada',
-                'Salida' => 'Salida',
-            ])
-            ->required(),
-Forms\Components\Select::make('user_id')
-                ->label('Usuario')
-                ->options(User::pluck('name', 'id'))
-                ->required(),
-        TextInput::make('cantidad_usar')
-            ->label('Cantidad del movimiento')
-            ->numeric()
-            ->required()
-            ->rule(function ($get) {
-                if ($get('tipo_movimiento') === 'Salida') {
-                    $stock = \App\Models\InventarioMuniciones::where('aerodromo_id', $get('aerodromo_id'))
-                        ->where('catinventario_id', $get('catinventario_id'))
-                        ->first()?->cantidad_actual ?? 0;
-
-                    return "max:$stock";
-                }
-                return null;
-            }),
-            ]);
-
+            ->schema([]);
     }
 
-    public  function table(Table $table): Table
+    public function table(Table $table): Table
     {
         return $table
             ->columns([
-                // Tables\Columns\TextColumn::make('aerodromo.nombre')->label('Aeródromo')->searchable(),
-                Tables\Columns\TextColumn::make('catalogoInventario.nombre')->label('Equipo')->searchable(),
-                Tables\Columns\TextColumn::make('tipo_movimiento')->label('Tipo de Movimiento'),
-                Tables\Columns\TextColumn::make('cantidad_usar')->label('Cantidad Usada'),
+                Tables\Columns\TextColumn::make('catalogoInventario.nombre')->label('Equipo')->searchable(), //Catalogo de Inventario
+
+                Tables\Columns\TextColumn::make('tipo_movimiento')->label('Tipo de Movimiento'), //Tipo de Movimiento
+
+                Tables\Columns\TextColumn::make('cantidad_usar')->label('Cantidad'), // Cantidad a usar
+
                 Tables\Columns\TextColumn::make('stock_actual')
-                    ->label('Stock Disponible')
+                    ->label('Stock Disponible')                                      //Stock Actual
                     ->getStateUsing(function ($record) {
                         $inventario = InventarioMuniciones::where('aerodromo_id', $record->aerodromo_id)
                             ->where('catinventario_id', $record->catinventario_id)
                             ->first();
                         return $inventario ? $inventario->cantidad_actual : 0;
                     }),
-                // Tables\Columns\TextColumn::make('created_at')
-                //     ->label('Fecha y Hora')
-                //     ->dateTime('d/m/Y H:i')
-                //     ->sortable(),
-               Tables\Columns\TextColumn::make('user.name')->label('Persona')->searchable(),
 
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('Fecha y Hora')
+                    ->dateTime('d/m/Y H:i')
+                    ->sortable(),
 
-            ])
-            ->actions([
-                // Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                // Tables\Actions\DeleteAction::make(),
+                Tables\Columns\TextColumn::make('user.name')->label('Responsable')->searchable(), //Responsable
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make()
-                ->label('Nuevo Movimiento'),
+                Tables\Actions\Action::make('entrada')
+                    ->label('🟢 Entrada')
+                    ->form([
+                        Select::make('aerodromo_id')
+                            ->label('Aeródromo')
+                            ->options(Aerodromo::pluck('nombre', 'id'))
+                            ->required()
+                            ->reactive()
+                            ->afterStateUpdated(fn (callable $set) => $set('catinventario_id', null)),
+
+                        Select::make('catinventario_id')
+                            ->label('Equipo')
+                            ->options(CatalogoInventario::pluck('nombre', 'id'))
+                            ->required()
+                            ->reactive(),
+
+                        Placeholder::make('stock_actual')
+                            ->label('Stock disponible')
+                            ->content(function ($get) {
+                                return InventarioMuniciones::where('aerodromo_id', $get('aerodromo_id'))
+                                    ->where('catinventario_id', $get('catinventario_id'))
+                                    ->first()?->cantidad_actual ?? 'No disponible';
+                            }),
+
+                        Select::make('tipo_movimiento')
+                            ->label('Tipo de Movimiento')
+                            ->options([
+                                'Compra' => '🟢 Entrada - Compra',
+                                'Donacion' => '🟢 Entrada - Donación',
+                            ])
+                            ->required(),
+
+                        Select::make('user_id')
+                            ->label('Usuario')
+                            ->options(User::pluck('name', 'id'))
+                            ->required(),
+
+                        TextInput::make('cantidad_usar')
+                            ->label('Cantidad del movimiento')
+                            ->numeric()
+                            ->required(),
+
+                        Textarea::make('comentario')
+                            ->label('Comentario')
+                            ->maxLength(255),
+                    ])
+                    ->action(function (array $data) {
+                        $result = MovimientoInventario::create($data);
+
+                        if ($result['success']) {
+                            Notification::make()
+                                ->title('Entrada registrada correctamente')
+                                ->success()
+                                ->send();
+                        } else {
+                            Notification::make()
+                                ->title('Error al registrar la entrada')
+                                ->body($result['message'])
+                                ->danger()
+                                ->send();
+                        }
+                    }),
+
+                Tables\Actions\Action::make('salida')
+                    ->label('🔴 Salida')
+                    ->form([
+                        Select::make('aerodromo_id')
+                            ->label('Aeródromo')
+                            ->options(Aerodromo::pluck('nombre', 'id'))
+                            ->required()
+                            ->reactive()
+                            ->afterStateUpdated(fn (callable $set) => $set('catinventario_id', null)),
+
+                        Select::make('catinventario_id')
+                            ->label('Equipo')
+                            ->options(CatalogoInventario::pluck('nombre', 'id'))
+                            ->required()
+                            ->reactive(),
+
+                        Placeholder::make('stock_actual')
+                            ->label('Stock disponible')
+                            ->content(function ($get) {
+                                return InventarioMuniciones::where('aerodromo_id', $get('aerodromo_id'))
+                                    ->where('catinventario_id', $get('catinventario_id'))
+                                    ->first()?->cantidad_actual ?? 'No disponible';
+                            }),
+
+                        Select::make('tipo_movimiento')
+                            ->label('Tipo de Movimiento')
+                            ->options([
+                                'Consumo' => '🔴 Salida - Consumo',
+                                'Baja' => '🔴 Salida - Baja',
+                            ])
+                            ->required(),
+
+                        Select::make('user_id')
+                            ->label('Usuario')
+                            ->options(User::pluck('name', 'id'))
+                            ->required(),
+
+                        TextInput::make('cantidad_usar')
+                            ->label('Cantidad del movimiento')
+                            ->numeric()
+                            ->required(),
+
+                        Textarea::make('comentario')
+                            ->label('Comentario')
+                            ->maxLength(255),
+                    ])
+                    ->action(function (array $data) {
+                        $result = MovimientoInventario::create($data);
+
+                        if ($result['success']) {
+                            Notification::make()
+                                ->title('Salida registrada correctamente')
+                                ->success()
+                                ->send();
+                        } else {
+                            Notification::make()
+                                ->title('Error al registrar la salida')
+                                ->body($result['message'])
+                                ->danger()
+                                ->send();
+                        }
+                    })
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),

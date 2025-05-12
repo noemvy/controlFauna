@@ -63,14 +63,6 @@ class InventarioMunicionesResource extends Resource
     {
         return $table
             ->columns([
-                // Tables\Columns\TextColumn::make('catalogoInventario.nombre')->label('Equipo'),
-                // Tables\Columns\TextColumn::make('aerodromo.nombre')->label('Aeródromo'),
-                // Tables\Columns\TextColumn::make('cantidad_actual')->label('Cantidad Disponible'),
-                // Tables\Columns\TextColumn::make('cantidad_minima')->label('Cantidad Minima')
-                //     ->label('Cantidad Total')
-                //     ->numeric()
-                //     ->sortable(),
-
             Tables\Columns\TextColumn::make('catalogoInventario.nombre')->label('Equipo'),
             Tables\Columns\TextColumn::make('aerodromo.nombre')->label('Aeródromo'),
             Tables\Columns\TextColumn::make('cantidad_actual')->label('Cantidad Disponible'),
@@ -92,7 +84,9 @@ class InventarioMunicionesResource extends Resource
 
             ])
             ->actions([
-                Tables\Actions\EditAction::make()
+                Tables\Actions\ViewAction::make(),
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
 
 
             ])
