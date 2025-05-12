@@ -10,6 +10,10 @@ class InventarioMuniciones extends Model
         'aerodromo_id',
         'cantidad_actual',
         'cantidad_minima',];
+
+
+
+    /*---------------------------------------------RELACIONES CON OTROS MODELOS--------------------------------------------------*/
     //Relacion con Aerodromo
         public function aerodromo()
     {
@@ -27,7 +31,7 @@ class InventarioMuniciones extends Model
         return $this->belongsTo(User::class, 'user_id');
 
 }
-// En el modelo InventarioMuniciones
+// Relacion con InventarioMuniciones
 public function movimientos()
 {
     return $this->hasMany(MovimientoInventario::class, 'catinventario_id', 'catinventario_id')
