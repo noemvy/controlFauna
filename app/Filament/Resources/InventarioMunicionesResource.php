@@ -24,11 +24,13 @@ class InventarioMunicionesResource extends Resource
 {
     protected static ?string $model = InventarioMuniciones::class;
 
+
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationLabel = "Inventario de Municiones";
     protected static ?string $navigationGroup = 'Catálogos';
     protected static ?int $navigationSort = 9;
     protected static ?string $modelLabel = 'Inventario de Equipos';
+
 
     public static function form(Form $form): Form
     {
@@ -48,10 +50,10 @@ class InventarioMunicionesResource extends Resource
                         ->required()
                         ->searchable()
                         ->preload(),
-                Forms\Components\TextInput::make('cantidad_actual')
-                    ->label('Cantidad Actual')
-                    ->required()
-                    ->maxLength(20),
+                // Forms\Components\TextInput::make('cantidad_actual')
+                //     ->label('Cantidad Actual')
+                //     ->required()
+                //     ->maxLength(20),
                 Forms\Components\TextInput::make('cantidad_minima')
                     ->label('Cantidad Minima')
                     ->required()
@@ -65,14 +67,26 @@ class InventarioMunicionesResource extends Resource
             ->columns([
             Tables\Columns\TextColumn::make('catalogoInventario.nombre')->label('Equipo'),
             Tables\Columns\TextColumn::make('aerodromo.nombre')->label('Aeródromo'),
-            Tables\Columns\TextColumn::make('cantidad_actual')->label('Cantidad Disponible'),
+            Tables\Columns\TextColumn::make('cantidad_actual')
+    ->label('Cantidad Disponible')
+    ->formatStateUsing(function ($state, $record) {
+        return $state . ' unidades';
+    })
+    ->color(function ($state, $record) {
+        if ($state <= $record->cantidad_minima) {
+            return 'danger'; // rojo
+        } elseif ($state <= $record->cantidad_minima + 5) {
+            return 'warning'; // amarillo
+        }
+        return 'success'; // verde
+    }),
+
             Tables\Columns\TextColumn::make('cantidad_minima')->label('Cantidad Minima'),
-            // Mostrar movimientos asociados
-            // Tables\Columns\TextColumn::make('movimientos_count')->label('Número de Movimientos')
-            //     ->getStateUsing(function ($record) {
-            //         return $record->movimientos->count(); // Cuenta los movimientos asociados
-            //     }),
-            // Tables\Columns\TextColumn::make('movimientos.tipo_movimiento')->label('Tipos Movimientos'),
+
+            Tables\Columns\TextColumn::make('movimientos_count')->label('Número de Movimientos')
+                ->getStateUsing(function ($record) {
+                    return $record->movimientos->count();
+                }),
                 ])
 
 
@@ -80,14 +94,12 @@ class InventarioMunicionesResource extends Resource
                 SelectFilter::make('aerodromo.id')
                 ->label('Filtrar por Aeropuerto')
                 ->relationship('aerodromo', 'nombre')
-                ->placeholder('Selecciona un Equipo'),
+                ->placeholder('Selecciona un Aeropuerto'),
 
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
 
+                Tables\Actions\EditAction::make()->label('Crear Movimientos'),
 
             ])
             ->bulkActions([

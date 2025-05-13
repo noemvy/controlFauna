@@ -13,7 +13,21 @@ class EditInventarioMuniciones extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+           
         ];
     }
+
+public function getBreadcrumb(): string
+{
+    return 'Movimientos';
+}
+
+
+
+public function getHeading(): string
+{
+    return 'Movimientos';
+}
+
+
 }

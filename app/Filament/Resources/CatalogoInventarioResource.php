@@ -34,13 +34,12 @@ class CatalogoInventarioResource extends Resource
                 ->searchable()
                 ->required(),
 
-                Forms\Components\Select::make('nombre')
-                ->label('Equipo')
-                ->placeholder('Eliga el equipo')
-                ->options(CatalogoInventario::all()->pluck('nombre','id'))
-                    ->required()
-                    ->searchable()
-                    ->preload(),
+                Forms\Components\TextInput::make('nombre')
+                ->label('Nombre del equipo')
+                ->placeholder('Escriba el nombre del equipo')
+                ->required()
+                ->maxLength(255),
+
 
                 Forms\Components\Select::make('categoria_equipo')
                     ->label('Tipo de Equipo')
