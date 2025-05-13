@@ -41,23 +41,51 @@ class MovimientoInventario extends Model
         self::ajustarInventario($movimiento);
     });
 }
+// protected static function ajustarInventario($movimiento)
+// {
+//     $inventario = InventarioMuniciones::where('aerodromo_id', $movimiento->aerodromo_id)
+//         ->where('catinventario_id', $movimiento->catinventario_id)
+//         ->first();
+
+//     if (! $inventario) return;
+//     $tiposEntrada = ['Compra', 'Donacion'];
+
+//     if (in_array($movimiento->tipo_movimiento, $tiposEntrada)) {
+//         $inventario->cantidad_actual += $movimiento->cantidad_usar;
+//     } else {
+//         $inventario->cantidad_actual -= $movimiento->cantidad_usar;
+//     }
+
+//     $inventario->save();
+// }
+
 protected static function ajustarInventario($movimiento)
 {
     $inventario = InventarioMuniciones::where('aerodromo_id', $movimiento->aerodromo_id)
         ->where('catinventario_id', $movimiento->catinventario_id)
         ->first();
 
-    if (! $inventario) return;
+    if (! $inventario) {
+        throw new \Exception("Inventario no encontrado para este aeródromo y categoría.");
+    }
+
     $tiposEntrada = ['Compra', 'Donacion'];
 
     if (in_array($movimiento->tipo_movimiento, $tiposEntrada)) {
+
         $inventario->cantidad_actual += $movimiento->cantidad_usar;
     } else {
+        
+        if ($inventario->cantidad_actual < $movimiento->cantidad_usar) {
+            throw new \Exception("No hay stock suficiente para realizar esta salida.");
+        }
+
         $inventario->cantidad_actual -= $movimiento->cantidad_usar;
     }
 
     $inventario->save();
 }
+
 
 
 

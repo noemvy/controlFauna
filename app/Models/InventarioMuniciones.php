@@ -10,7 +10,7 @@ class InventarioMuniciones extends Model
         'aerodromo_id',
         'cantidad_actual',
         'cantidad_minima',
-        
+
     ];
 
 
