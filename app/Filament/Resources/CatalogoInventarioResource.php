@@ -54,11 +54,14 @@ class CatalogoInventarioResource extends Resource
                     ->label('Descripción del equipo')
                     ->required()
                     ->maxLength(200),
-                Forms\Components\TextInput::make('cantidad_minima')
-                    ->label('Cantidad Minima')
-                    ->maxLength(10)
+                Forms\Components\Select::make('estado')
+                    ->label('Estado')
+                    ->options([
+                        1 => 'Activo',
+                        0 => 'Inactivo',
+                    ])
+                    ->default(1) // Valor por defecto establecido como "Activo"
                     ->required(),
-
             ]);
 
     }
@@ -75,6 +78,13 @@ class CatalogoInventarioResource extends Resource
                 // ->searchable(),
                 Tables\Columns\TextColumn::make('cantidad_stock')
                 ->searchable(),
+                Tables\Columns\IconColumn::make('estado')
+                    ->label('Activo')
+                    ->boolean()
+                    ->trueIcon('heroicon-o-check-circle') // Ícono para verdadero
+                    ->falseIcon('heroicon-o-x-circle') // Ícono para falso
+                    ->trueColor('success') // Color para verdadero
+                    ->falseColor('danger'), // Color para falso
             ])
             ->filters([
                 //
