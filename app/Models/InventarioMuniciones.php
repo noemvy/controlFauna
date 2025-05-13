@@ -9,7 +9,9 @@ class InventarioMuniciones extends Model
     protected $fillable = [ 'catinventario_id',
         'aerodromo_id',
         'cantidad_actual',
-        'cantidad_minima',];
+        'cantidad_minima',
+        
+    ];
 
 
 

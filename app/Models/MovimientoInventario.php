@@ -48,8 +48,6 @@ protected static function ajustarInventario($movimiento)
         ->first();
 
     if (! $inventario) return;
-
-    // Clasificamos si el movimiento es entrada o salida
     $tiposEntrada = ['Compra', 'Donacion'];
 
     if (in_array($movimiento->tipo_movimiento, $tiposEntrada)) {
