@@ -70,12 +70,10 @@ class CatalogoInventarioResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('nombre')
+                Tables\Columns\TextColumn::make('nombre')->label('Nombre Herramienta')
                 ->searchable(),
                 Tables\Columns\TextColumn::make('descripcion')
                 ->searchable(),
-                // Tables\Columns\TextColumn::make('cantidad_minima')
-                // ->searchable(),
                 Tables\Columns\TextColumn::make('cantidad_stock')
                 ->searchable(),
                 Tables\Columns\IconColumn::make('estado')
