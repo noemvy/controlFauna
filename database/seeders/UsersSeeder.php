@@ -21,6 +21,7 @@ class UsersSeeder extends Seeder
                 'password' => Hash::make('
                 '),
                 'codigo_colaborador' => 'E04289',
+                'estado' => '1',
                 'aerodromo_id' => 1,
                 'departamento_id' => 1,
             ],
@@ -28,6 +29,7 @@ class UsersSeeder extends Seeder
                 'name' => 'Jefe',
                 'email' => 'jefe@tocumenpanama.aero',
                 'password' => Hash::make('Tocumen123'), // 🔒 Contraseña encriptada
+                'estado' => '1',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -35,6 +37,7 @@ class UsersSeeder extends Seeder
                 'name' => 'Supervisor',
                 'email' => 'supervisor@tocumenpanama.aero',
                 'password' => Hash::make('Tocumen123'),
+                'estado' => '1',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -42,6 +45,7 @@ class UsersSeeder extends Seeder
                 'name' => 'noemi',
                 'email' => 'noemi@gmail.com',
                 'password' => Hash::make('Tocumen123'),
+                'estado' => '1',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
