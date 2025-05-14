@@ -75,6 +75,6 @@ return new class extends Migration
         Schema::dropIfExists('movimiento_inventario');
         Schema::dropIfExists('inventario_municiones');
         Schema::dropIfExists('catalogo_inventarios');
-        Schema::dropIfExists('tranferencias_municiones');
+        Schema::dropIfExists('transferencias_municiones');
     }
 };

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('codigo_colaborador')->unique()->nullable();
+            $table->integer('estado')->nullable(); //cambiar dato a booelano
             $table->foreignId('aerodromo_id')->nullable()->constrained('aerodromos')->onDelete('cascade');
             $table->foreignId('departamento_id')->nullable()->constrained('departamentos')->onDelete('cascade');
             $table->rememberToken();
